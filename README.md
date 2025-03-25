@@ -27,8 +27,8 @@ Before you begin, ensure you have met the following requirements:
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/ai-software-development-agent.git
-cd ai-software-development-agent
+git clone https://github.com/Shubhamsaboo/awesome-llm-apps.git 
+cd ai_agent_tutorials\AI_Software_Engineer_Agent
 ```
 
 2. Create a virtual environment (optional but recommended):
