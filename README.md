@@ -2,7 +2,7 @@
 
 ## Complete Project Documentation
 
-```markdown name=README.md
+
 # 🚀 AI Software Development Agent
 
 A comprehensive AI-powered application that assists with frontend development, backend API generation, and DSA problem-solving, built with security as a priority.
@@ -82,7 +82,7 @@ The application implements multiple layers of security:
    ```bash
    git clone https://github.com/ShawneilRodrigues/Software-Engineer-Agent.git
    cd Software-Engineer-Agent
-   ```
+   
 
 2. **Create a virtual environment (recommended):**
    ```bash
