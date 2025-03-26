@@ -3,8 +3,6 @@
 ## Complete Project Documentation
 
 
-# 🚀 AI Software Development Agent
-
 A comprehensive AI-powered application that assists with frontend development, backend API generation, and DSA problem-solving, built with security as a priority.
 
 ## 📌 Table of Contents
@@ -317,6 +315,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 Developed with ❤️ by ShawneilRodrigues
 
 Last updated: 2025-03-26
-```
-
-This comprehensive README provides complete documentation for your AI Software Development Agent project, including detailed installation instructions, usage guides, security features, and troubleshooting information. It's structured to be both informative for new users and helpful for developers who might want to contribute to or modify the project.
+## contact: shawneilrodrigues@gmail.com
