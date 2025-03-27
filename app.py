@@ -1,4 +1,4 @@
-# main.py
+# Add these imports at the top of your app.py file
 import os
 import streamlit as st
 import streamlit.components.v1 as components
@@ -10,13 +10,12 @@ import hashlib
 import time
 import socket
 import subprocess
+import pandas as pd
+import numpy as np
+import pickle
+import base64
+import io
 from dotenv import load_dotenv
-
-# Rest of your imports...
-from utils.port_utils import find_available_port
-
-# Load environment variables from .env file
-load_dotenv()
 
 from frontend.frontend_dev import generate_frontend_code
 from backend.backend_dev import generate_backend_code
@@ -25,8 +24,10 @@ from utils.code_execution import execute_python_code
 from utils.code_extractor import extract_code_block
 from utils.code_validator import validate_code
 from utils.secure_config import SecureConfig
+from utils.port_utils import find_available_port
+from utils.ml_training import train_model, clean_data, remove_low_variance_features, remove_correlated_features
+from utils.ml_visualization import get_roc_curve, get_feature_importance, get_confusion_matrix, generate_classification_report
 
-# Initialize secure configuration
 secure_config = SecureConfig()
 
 def main():
@@ -91,7 +92,8 @@ def main():
         task = st.selectbox("Select a task:", [
             "Frontend Development", 
             "Backend Development", 
-            "DSA Problem Solving"
+            "DSA Problem Solving",
+            "Machine Learning"
         ])
 
     # Main content area
@@ -105,12 +107,285 @@ def main():
             backend_development()
         elif task == "DSA Problem Solving":
             dsa_problem_solving()
+        elif task == "Machine Learning":
+            ml_training_prediction()
     except Exception as e:
         st.error(f"An error occurred: {str(e)}")
         # Only log the full traceback, don't show it to users
         print(traceback.format_exc())
 
     st.markdown('</div>', unsafe_allow_html=True)
+
+# Add this function to your app.py file
+def ml_training_prediction():
+    st.subheader("🤖 Machine Learning Model Training")
+    
+    # File uploader for CSV
+    uploaded_file = st.file_uploader("Upload your CSV dataset", type=['csv'])
+    
+    if uploaded_file is not None:
+        # Display dataset preview
+        try:
+            df = pd.read_csv(uploaded_file)
+            st.write("### Dataset Preview:")
+            st.dataframe(df.head())
+            
+            # Dataset info
+            st.write("### Dataset Information:")
+            buffer = io.StringIO()
+            df.info(buf=buffer)
+            info_str = buffer.getvalue()
+            st.text(info_str)
+            
+            # Dataset statistics
+            st.write("### Dataset Statistics:")
+            st.dataframe(df.describe())
+            
+            # Missing values check
+            missing_values = df.isnull().sum()
+            if missing_values.sum() > 0:
+                st.warning("⚠️ Your dataset contains missing values that will be handled during preprocessing.")
+                st.dataframe(missing_values[missing_values > 0].rename("Missing Values Count"))
+            
+            # Select target column
+            all_columns = df.columns.tolist()
+            target_column = st.selectbox("Select target column for prediction:", all_columns)
+            
+            # Model training parameters
+            st.subheader("Training Parameters")
+            st.write("You can customize your model's parameters below:")
+            
+            model_type = st.selectbox(
+                "Select model type:", 
+                ["Random Forest", "Decision Tree", "Gradient Boosting"]
+            )
+            
+            test_size = st.slider("Test set size (%):", 10, 50, 20)
+            
+            # Advanced parameters collapsible section
+            with st.expander("Advanced Parameters"):
+                if model_type == "Random Forest":
+                    n_estimators = st.slider("Number of trees:", 50, 500, 100)
+                    max_depth = st.slider("Maximum tree depth:", 3, 20, 10)
+                    min_samples_split = st.slider("Minimum samples to split:", 2, 20, 2)
+                    
+                elif model_type == "Decision Tree":
+                    max_depth = st.slider("Maximum tree depth:", 3, 20, 10)
+                    min_samples_split = st.slider("Minimum samples to split:", 2, 20, 2)
+                    criterion = st.selectbox("Criterion:", ["gini", "entropy"])
+                    
+                elif model_type == "Gradient Boosting":
+                    n_estimators = st.slider("Number of trees:", 50, 500, 100)
+                    learning_rate = st.slider("Learning rate:", 0.01, 0.3, 0.1, step=0.01)
+                    max_depth = st.slider("Maximum tree depth:", 3, 10, 3)
+            
+            # Start training
+            if st.button("Train Model"):
+                with st.spinner("Training model... This may take a while..."):
+                    try:
+                        # Reset file pointer
+                        uploaded_file.seek(0)
+                        
+                        # Prepare data
+                        df = pd.read_csv(uploaded_file)
+                        df = clean_data(df)
+                        
+                        # Split into features & labels
+                        X = df.drop(columns=[target_column])
+                        y = df[target_column]
+                        
+                        # Save original feature names
+                        feature_names = X.columns.tolist()
+                        
+                        # Apply feature selection
+                        X, variance_support = remove_low_variance_features(X.values)
+                        X = remove_correlated_features(X)
+                        
+                        # Convert back to dataframe for better handling
+                        X = pd.DataFrame(X)
+                        
+                        # Split dataset
+                        from sklearn.model_selection import train_test_split
+                        X_train, X_test, y_train, y_test = train_test_split(
+                            X, y, test_size=test_size/100, random_state=42
+                        )
+                        
+                        # Train model based on selection
+                        if model_type == "Random Forest":
+                            from sklearn.ensemble import RandomForestClassifier
+                            model = RandomForestClassifier(
+                                n_estimators=n_estimators,
+                                max_depth=max_depth,
+                                min_samples_split=min_samples_split,
+                                random_state=42
+                            )
+                        elif model_type == "Decision Tree":
+                            from sklearn.tree import DecisionTreeClassifier
+                            model = DecisionTreeClassifier(
+                                max_depth=max_depth,
+                                min_samples_split=min_samples_split,
+                                criterion=criterion,
+                                random_state=42
+                            )
+                        elif model_type == "Gradient Boosting":
+                            from sklearn.ensemble import GradientBoostingClassifier
+                            model = GradientBoostingClassifier(
+                                n_estimators=n_estimators,
+                                learning_rate=learning_rate,
+                                max_depth=max_depth,
+                                random_state=42
+                            )
+                        
+                        # Train the model
+                        model.fit(X_train, y_train)
+                        
+                        # Model evaluation
+                        st.success("✅ Model training completed!")
+                        
+                        # Show results in tabs
+                        results_tab, viz_tab, download_tab = st.tabs(["Results", "Visualizations", "Download Model"])
+                        
+                        with results_tab:
+                            # Model accuracy
+                            train_score = model.score(X_train, y_train)
+                            test_score = model.score(X_test, y_test)
+                            
+                            st.metric("Training Accuracy", f"{train_score:.2%}")
+                            st.metric("Testing Accuracy", f"{test_score:.2%}")
+                            
+                            # Classification report
+                            st.subheader("Classification Report")
+                            report_html = generate_classification_report(model, X_test, y_test)
+                            st.components.v1.html(report_html, height=300)
+                        
+                        with viz_tab:
+                            col1, col2 = st.columns(2)
+                            
+                            with col1:
+                                # ROC curve
+                                roc_fig = get_roc_curve(model, X_test, y_test)
+                                if roc_fig:
+                                    st.plotly_chart(roc_fig, use_container_width=True)
+                                
+                            with col2:
+                                # Confusion matrix
+                                cm_fig = get_confusion_matrix(model, X_test, y_test)
+                                if cm_fig:
+                                    st.plotly_chart(cm_fig, use_container_width=True)
+                            
+                            # Feature importance
+                            st.subheader("Feature Importance")
+                            feat_fig = get_feature_importance(model, feature_names[:X.shape[1]])
+                            if feat_fig:
+                                st.plotly_chart(feat_fig, use_container_width=True)
+                            
+                        with download_tab:
+                            # Save the model to a file
+                            model_file = tempfile.NamedTemporaryFile(delete=False, suffix=".pkl")
+                            with open(model_file.name, "wb") as f:
+                                pickle.dump(model, f)
+                            
+                            # Generate model code for download
+                            model_code = generate_model_code(model_type, model)
+                            
+                            # Provide download buttons
+                            st.download_button(
+                                label="Download Trained Model (.pkl)",
+                                data=open(model_file.name, "rb").read(),
+                                file_name=f"{model_type.lower().replace(' ', '_')}_model.pkl",
+                                mime="application/octet-stream"
+                            )
+                            
+                            st.download_button(
+                                label="Download Model Code (.py)",
+                                data=model_code,
+                                file_name=f"{model_type.lower().replace(' ', '_')}_model.py",
+                                mime="text/plain"
+                            )
+                            
+                            # Clean up the temporary file
+                            os.unlink(model_file.name)
+                    
+                    except Exception as e:
+                        st.error(f"An error occurred during model training: {str(e)}")
+                        # Log the full traceback but don't display it
+                        print(traceback.format_exc())
+        except Exception as e:
+            st.error(f"Error processing the file: {str(e)}")
+            st.write("Please ensure your CSV file is valid and try again.")
+
+def generate_model_code(model_type, model):
+    """Generate Python code for the trained model"""
+    
+    code = f"""# Generated {model_type} Model
+import pandas as pd
+import pickle
+import numpy as np
+from sklearn.preprocessing import LabelEncoder
+
+# Load the trained model
+def load_model(model_path='model.pkl'):
+    with open(model_path, 'rb') as f:
+        model = pickle.load(f)
+    return model
+
+# Data preprocessing function
+def preprocess_data(df):
+    # Clean data
+    df = df.drop_duplicates()  # Remove duplicates
+    df = df.dropna()  # Remove missing values
+
+    # Convert categorical columns to numeric using Label Encoding
+    for col in df.select_dtypes(include=["object"]).columns:
+        df[col] = LabelEncoder().fit_transform(df[col])
+
+    return df
+
+# Prediction function
+def predict(input_data, model_path='model.pkl'):
+    \"\"\"
+    Make predictions using the trained model
+    
+    Args:
+        input_data: DataFrame containing features
+        model_path: Path to the saved model file
+        
+    Returns:
+        Predictions
+    \"\"\"
+    # Load the model
+    model = load_model(model_path)
+    
+    # Preprocess input data
+    input_data = preprocess_data(input_data)
+    
+    # Make predictions
+    predictions = model.predict(input_data)
+    
+    # Get prediction probabilities if available
+    if hasattr(model, 'predict_proba'):
+        probabilities = model.predict_proba(input_data)
+        return predictions, probabilities
+    
+    return predictions, None
+
+# Example usage
+if __name__ == "__main__":
+    # Example: Load test data
+    # test_data = pd.read_csv('test_data.csv')
+    
+    # Example: Make predictions
+    # predictions, probabilities = predict(test_data)
+    
+    # Example: Print results
+    # print("Predictions:", predictions)
+    # if probabilities is not None:
+    #     print("Prediction probabilities:", probabilities)
+    
+    print("Model loaded successfully and ready to make predictions.")
+"""
+    
+    return code
 
 def sanitize_html(html_content):
     """
@@ -326,6 +601,8 @@ def dsa_problem_solving():
                 st.error(f"Error solving DSA problem: {str(e)}")
                 # Log the full traceback but don't display it
                 print(traceback.format_exc())
+
+
 
 if __name__ == "__main__":
     main()
