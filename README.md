@@ -186,31 +186,40 @@ The application will be available at `http://localhost:8501`
 ## 📁 Project Structure
 
 ```
-Software-Engineer-Agent/
+📁 Software-Engineer-Agent/
 │
-├── app.py                  # Main application entry point
-├── requirements.txt        # Required Python packages
-├── .env                    # Environment variables (create this file)
-├── .gitignore              # Git ignore file
-├── Dockerfile              # Docker configuration (optional)
+├── 📄 .gitignore               # Git ignore file
+├── 📄 README.md                # Project documentation
+├── 📄 app.py                   # Main application file
+├── 📄 dockerfile               # Docker configuration
+├── 📄 requirements.txt         # Python dependencies
 │
-├── backend/                # Backend development module
-│   └── backend_dev.py      # API code generation utilities
+├── 📁 backend/
+│   └── 📄 backend_dev.py       # Backend development code
 │
-├── frontend/               # Frontend development module
-│   └── frontend_dev.py     # Website generation utilities
+├── 📁 dsa/
+│   └── 📄 dsa_solver.py        # DSA problem solver implementation
 │
-├── dsa/                    # DSA problem-solving module
-│   └── dsa_solver.py       # Algorithm problem solver
+├── 📁 frontend/
+│   └── 📄 frontend_dev.py      # Frontend development code
 │
-├── utils/                  # Utility functions
-│   ├── code_execution.py   # Secure code execution utilities
-│   ├── code_extractor.py   # Code extraction from AI responses
-│   ├── code_validator.py   # Security validation for generated code
-│   ├── secure_config.py    # Secure configuration management
-│   └── port_utils.py       # Network port utilities
+├── 📁 ml_training/
+│   ├── 📄 __init__.py          # Package initialization
+│   ├── 📄 model_trainer.py     # Model training implementation
+│   ├── 📄 predictor.py         # Prediction functionality
+│   └── 📄 preprocessing.py     # Data preprocessing utilities
 │
-└── tests/                  # Unit and integration tests
+├── 📁 tests/
+│   └── 📄 test_generated_code.py # Test cases for generated code
+│
+└── 📁 utils/
+    ├── 📄 code_execution.py    # Code execution utilities
+    ├── 📄 code_extractor.py    # Code extraction tools
+    ├── 📄 code_validator.py    # Code validation functions
+    ├── 📄 ml_training.py       # ML training utilities
+    ├── 📄 ml_visualization.py  # ML visualization tools
+    ├── 📄 port_utils.py        # Port management utilities
+    └── 📄 secure_config.py     # Security configuration
 ```
 
 ## 🔍 Technical Details
