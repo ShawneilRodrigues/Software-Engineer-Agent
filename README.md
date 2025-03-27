@@ -186,31 +186,40 @@ The application will be available at `http://localhost:8501`
 ## 📁 Project Structure
 
 ```
-Software-Engineer-Agent/
+📁 Software-Engineer-Agent/
 │
-├── app.py                  # Main application entry point
-├── requirements.txt        # Required Python packages
-├── .env                    # Environment variables (create this file)
-├── .gitignore              # Git ignore file
-├── Dockerfile              # Docker configuration (optional)
+├── 📄 .gitignore               # Git ignore file
+├── 📄 README.md                # Project documentation
+├── 📄 app.py                   # Main application file
+├── 📄 dockerfile               # Docker configuration
+├── 📄 requirements.txt         # Python dependencies
 │
-├── backend/                # Backend development module
-│   └── backend_dev.py      # API code generation utilities
+├── 📁 backend/
+│   └── 📄 backend_dev.py       # Backend development code
 │
-├── frontend/               # Frontend development module
-│   └── frontend_dev.py     # Website generation utilities
+├── 📁 dsa/
+│   └── 📄 dsa_solver.py        # DSA problem solver implementation
 │
-├── dsa/                    # DSA problem-solving module
-│   └── dsa_solver.py       # Algorithm problem solver
+├── 📁 frontend/
+│   └── 📄 frontend_dev.py      # Frontend development code
 │
-├── utils/                  # Utility functions
-│   ├── code_execution.py   # Secure code execution utilities
-│   ├── code_extractor.py   # Code extraction from AI responses
-│   ├── code_validator.py   # Security validation for generated code
-│   ├── secure_config.py    # Secure configuration management
-│   └── port_utils.py       # Network port utilities
+├── 📁 ml_training/
+│   ├── 📄 __init__.py          # Package initialization
+│   ├── 📄 model_trainer.py     # Model training implementation
+│   ├── 📄 predictor.py         # Prediction functionality
+│   └── 📄 preprocessing.py     # Data preprocessing utilities
 │
-└── tests/                  # Unit and integration tests
+├── 📁 tests/
+│   └── 📄 test_generated_code.py # Test cases for generated code
+│
+└── 📁 utils/
+    ├── 📄 code_execution.py    # Code execution utilities
+    ├── 📄 code_extractor.py    # Code extraction tools
+    ├── 📄 code_validator.py    # Code validation functions
+    ├── 📄 ml_training.py       # ML training utilities
+    ├── 📄 ml_visualization.py  # ML visualization tools
+    ├── 📄 port_utils.py        # Port management utilities
+    └── 📄 secure_config.py     # Security configuration
 ```
 
 ## 🔍 Technical Details
@@ -245,6 +254,68 @@ The application dynamically finds available ports and runs generated APIs as sub
 available_port = find_available_port(8000, 9000)
 api_process = subprocess.Popen(["python", filename], ...)
 ```
+# Machine Learning Module Functionality 
+
+Based on my analysis of the project's machine learning components, here's a point-by-point breakdown of the functionality:
+
+## Core ML Training Module (`ml_training/`)
+
+### 1. Data Preprocessing (`preprocessing.py`)
+- **Automated Data Type Identification**: Automatically identifies numerical and categorical columns in datasets
+- **Missing Value Handling**: Implements sophisticated strategies for handling missing data (median for numerical, most frequent for categorical)
+- **Feature Transformation**: Applies standardization to numerical features and one-hot encoding to categorical features
+- **Pipeline Architecture**: Uses scikit-learn's Pipeline and ColumnTransformer for robust preprocessing workflows
+- **Feature Name Preservation**: Maintains feature names after transformations for better interpretability
+
+### 2. Model Training (`model_trainer.py`)
+- **Multiple Model Support**: Implements training for various model types:
+  - Linear Regression
+  - Logistic Regression
+  - Random Forest Classifier
+  - Random Forest Regressor
+- **Automatic Data Splitting**: Divides data into training and testing sets with configurable parameters
+- **Comprehensive Metrics**: Calculates appropriate evaluation metrics based on model type:
+  - Regression: MSE, RMSE, R-squared
+  - Classification: Accuracy, detailed classification report
+- **Model Persistence**: Automatically saves trained models with hash-based unique filenames
+- **Model Evaluation**: Provides functionality to evaluate models on test data
+
+### 3. Prediction Capabilities (`predictor.py`)
+- **Flexible Input Formats**: Accepts predictions from various data formats (dict, list of dicts, DataFrame)
+- **Model Loading**: Can load previously saved models for inference
+- **Input Validation**: Ensures input data contains all required features and is properly formatted
+- **Preprocessing Integration**: Applies the same preprocessing transformations used during training
+- **Probability Support**: Returns prediction probabilities for classification models when available
+- **Batch Processing**: Supports batch predictions from CSV files with result export functionality
+
+## Supporting Utilities (`utils/`)
+
+### 4. ML Training Utilities (`ml_training.py`)
+- **Data Cleaning**: Provides functions for removing duplicates and handling missing values
+- **Advanced Feature Selection**:
+  - Low variance feature removal
+  - Correlation-based feature elimination to reduce redundancy
+- **Simplified Training Pipeline**: Offers a streamlined function that handles all training steps
+- **Temporary Model Storage**: Creates temporary files for model persistence
+
+### 5. Visualization Tools (`ml_visualization.py`)
+- **Performance Visualization**:
+  - ROC curve generation with AUC calculation
+  - Confusion matrix visualization with color coding
+- **Model Interpretability**:
+  - Feature importance visualization
+  - Classification report generation with styled HTML output
+- **Multi-class Support**: Handles both binary and multi-class classification visualization
+- **Interactive Visualizations**: Uses Plotly for creating interactive, web-friendly visualizations
+
+## Integration and Architecture
+- **Modular Design**: Clear separation of concerns between preprocessing, training, prediction, and visualization
+- **Flexible Configuration**: Configurable parameters throughout the pipeline
+- **Error Handling**: Comprehensive error handling with informative messages
+- **Reproducibility**: Consistent use of random state parameters for reproducible results
+- **Extensibility**: Code structure facilitates adding new model types and preprocessing techniques
+
+This machine learning module provides a comprehensive framework for data scientists and engineers to quickly build, train, evaluate, and deploy machine learning models with minimal boilerplate code while ensuring best practices are followed.
 
 ## 🔧 Troubleshooting
 
