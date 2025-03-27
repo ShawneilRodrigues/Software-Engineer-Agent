@@ -312,7 +312,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-Developed with ❤️ by ShawneilRodrigues
+Developed by ShawneilRodrigues
 
 Last updated: 2025-03-26
 ## contact: shawneilrodrigues@gmail.com
