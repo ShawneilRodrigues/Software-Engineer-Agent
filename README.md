@@ -43,7 +43,7 @@ A comprehensive AI-powered application that assists with frontend development, b
 - **Automated ML Pipeline**: Handles data preprocessing, feature engineering, and model training seamlessly.  
 - **Multi-Model Support**: Supports classification and regression models with comprehensive evaluation metrics.  
 - **Visualization & Insights**: Generates performance reports, confusion matrices, and feature importance plots.  
-- **Scalable & Modular**: Designed for easy integration, expansion, and reproducibility in ML workflows. 🚀  
+- **Scalable & Modular**: Designed for easy integration, expansion, and reproducibility in ML workflows.   
 
 ## 🔒 Security Features
 
