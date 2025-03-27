@@ -38,6 +38,13 @@ A comprehensive AI-powered application that assists with frontend development, b
 - Secure code execution with proper sandboxing and timeouts
 - View output directly in the interface
 
+### 🧠 Machine Learning  
+
+- **Automated ML Pipeline**: Handles data preprocessing, feature engineering, and model training seamlessly.  
+- **Multi-Model Support**: Supports classification and regression models with comprehensive evaluation metrics.  
+- **Visualization & Insights**: Generates performance reports, confusion matrices, and feature importance plots.  
+- **Scalable & Modular**: Designed for easy integration, expansion, and reproducibility in ML workflows. 🚀  
+
 ## 🔒 Security Features
 
 The application implements multiple layers of security:
