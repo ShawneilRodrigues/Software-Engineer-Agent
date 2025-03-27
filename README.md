@@ -3,7 +3,7 @@
 ## Complete Project Documentation
 
 
-A comprehensive AI-powered application that assists with frontend development, backend API generation, and DSA problem-solving, built with security as a priority.
+A comprehensive AI-powered application that assists with frontend development, backend API generation,ml models and DSA problem-solving, built with security as a priority.
 
 ## 📌 Table of Contents
 - [Features](#-features)
