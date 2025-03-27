@@ -2,7 +2,7 @@ import os
 from langchain_google_genai import ChatGoogleGenerativeAI
 
 def generate_backend_code(api_description):
-    llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp")
+    llm = ChatGoogleGenerativeAI(model="gemini-2.5-pro-exp-03-25")
 
     prompt = f"""
     Write a Python API using FastAPI for the following requirement:
