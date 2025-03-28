@@ -1,4 +1,4 @@
-# 🚀 AI Software Development Agent
+#  AI Software Development Agent
 
 ## Complete Project Documentation
 
