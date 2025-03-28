@@ -263,7 +263,7 @@ api_process = subprocess.Popen(["python", filename], ...)
 ```
 # Machine Learning Module Functionality 
 
-Based on my analysis of the project's machine learning components, here's a point-by-point breakdown of the functionality:
+ here's a point-by-point breakdown of the functionality:
 
 ## Core ML Training Module (`ml_training/`)
 
